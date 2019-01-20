@@ -2,8 +2,15 @@ from test_framework import generic_test
 
 
 def convert_base(num_as_string, b1, b2):
-    # TODO - you fill in here.
+    charMapper = {10: 'A', 11: 'B', 12: 'C', 13: '', }
+    decInput = 0
+
+
     return ''
+
+
+def FindFirstIndex():
+
 
 
 if __name__ == '__main__':

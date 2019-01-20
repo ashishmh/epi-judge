@@ -3,13 +3,24 @@ from test_framework.test_failure import TestFailure
 
 
 def int_to_string(x):
-    # TODO - you fill in here.
+
     return ''
 
 
 def string_to_int(s):
-    # TODO - you fill in here.
-    return 0
+    n = len(s) - 1
+    isNegative = False
+    if s[0] == '-':
+        isNegative = True
+        s = s[1:]
+        n -= 1
+    sum = 0
+    for i, j in zip(range(n, -1, -1), range(n + 1)):
+        sum += (ord(s[i]) - 48) * (10 ** j)
+    if isNegative:
+        return 0 - sum
+    else:
+        return sum
 
 
 def wrapper(x, s):

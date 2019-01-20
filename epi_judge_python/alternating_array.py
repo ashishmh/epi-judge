@@ -6,7 +6,11 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def rearrange(A):
-    # TODO - you fill in here.
+    for i in range(len(A) - 1):
+        if i % 2 == 0 and A[i + 1] < A[i]:
+            A[i + 1], A[i] = A[i], A[i + 1]
+        elif i % 2 != 0 and A[i + 1] > A[i]:
+            A[i + 1], A[i] = A[i], A[i + 1]
     return
 
 

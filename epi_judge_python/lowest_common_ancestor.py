@@ -6,9 +6,29 @@ from test_framework.test_failure import TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
+# (lca_node, num_nodes)
+def lca_inner(tree, node0, node1):
+    if not tree:
+        return None, 0
+
+    lca_l, num_l = lca_inner(tree.left, node0, node1)
+    if num_l == 2:
+        assert lca_l is not None
+        return lca_l, num_l
+    lca_r, num_r = lca_inner(tree.right, node0, node1)
+    if num_r == 2:
+        assert lca_r is not None
+        return lca_r, num_r
+
+    x = int(tree in (node0, node1))
+    result_num_nodes = x + num_l + num_r
+    result_lca_node = tree if result_num_nodes == 2 else None
+    return result_lca_node, result_num_nodes
+
+
 def lca(tree, node0, node1):
-    # TODO - you fill in here.
-    return None
+    result, _ = lca_inner(tree, node0, node1)
+    return result
 
 
 @enable_executor_hook

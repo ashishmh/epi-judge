@@ -4,20 +4,135 @@ from test_framework.test_failure import TestFailure
 
 class LruCache:
     def __init__(self, capacity):
-        # TODO - you fill in here.
+        self.capacity = capacity
+        self.data = dict()
+        self.dll = DoublyLinkedList()
         return
 
     def lookup(self, isbn):
-        # TODO - you fill in here.
-        return 0
+        if isbn not in self.data:
+            return -1
+            # return False, None
+
+        price, node = self.data[isbn]
+        self.dll.delete_node(node)
+        new_node = self.dll.insert_at_back(isbn)
+        self.data[isbn] = price, new_node
+        return price
+        # return True, price
 
     def insert(self, isbn, price):
-        # TODO - you fill in here.
+        if isbn in self.data:
+            old_price, node = self.data[isbn]
+            self.dll.delete_node(node)
+            new_node = self.dll.insert_at_back(isbn)
+            self.data[isbn] = (old_price, new_node)
+        else:
+            size = len(self.data)
+            if size == self.capacity:
+                node = self.dll.remove_from_front()
+                del self.data[node.val]
+            node = self.dll.insert_at_back(isbn)
+            self.data[isbn] = (price, node)
         return
 
     def erase(self, isbn):
-        # TODO - you fill in here.
+        if isbn not in self.data:
+            return False
+
+        _, node = self.data[isbn]
+        del self.data[isbn]
+        self.dll.delete_node(node)
         return True
+
+
+class Node:
+    def __init__(self, val, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    # inserts new node at front, returns ref
+    def insert_at_front(self, val):
+        self.size += 1
+        if self.head is not None:
+            new_node = Node(val, None, self.head)
+            self.head.left = new_node
+        else:
+            new_node = Node(val, None, None)
+            self.tail = new_node
+        self.head = new_node
+        return new_node
+
+    # removes node from front, returns ref
+    def remove_from_front(self):
+        if self.size == 0:
+            return None
+
+        self.size -= 1
+        old_head = self.head
+        self.head = self.head.right
+        if self.head:
+            self.head.left = None
+        else:
+            self.tail = None
+        return old_head
+
+    # inserts node at back, returns ref
+    def insert_at_back(self, val):
+        self.size += 1
+        new_node = Node(val, None, None)
+        if self.tail is None:
+            self.head = new_node
+        else:
+            self.tail.right = new_node
+            new_node.left = self.tail
+        self.tail = new_node
+        return new_node
+
+    # removes node from back, returns ref
+    def remove_from_back(self):
+        if self.size == 0:
+            return None
+
+        self.size -= 1
+        old_tail = self.tail
+        self.tail = self.tail.left
+        if self.tail:
+            self.tail.right = None
+        else:
+            self.head = None
+        return old_tail
+
+    # deletes nodes at specified ref
+    def delete_node(self, node_addr):
+        if self.size == 0:
+            return
+
+        if node_addr is self.head:
+            self.remove_from_front()
+        elif node_addr is self.tail:
+            self.remove_from_back()
+        else:
+            node_addr.left.right = node_addr.right
+            node_addr.right.left = node_addr.left
+            self.size -= 1
+
+    def print_list(self):
+        ptr = self.head
+        output = []
+        while ptr:
+            output.append(ptr.val)
+            ptr = ptr.right
+        print('List: ', output)
+        return
 
 
 def run_test(commands):

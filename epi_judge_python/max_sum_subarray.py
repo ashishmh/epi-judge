@@ -1,9 +1,18 @@
 from test_framework import generic_test
+import sys
 
 
 def find_maximum_subarray(A):
-    # TODO - you fill in here.
-    return -1
+    gsum = -sys.maxsize
+    curr_sum = 0
+
+    for i in range(0, len(A)):
+        curr_sum += A[i]
+        gsum = max(gsum, curr_sum)
+        if curr_sum < 0:
+            curr_sum = 0
+
+    return max(0, gsum)
 
 
 if __name__ == '__main__':

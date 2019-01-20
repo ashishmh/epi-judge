@@ -1,4 +1,5 @@
 import functools
+import random
 
 from test_framework import generic_test
 from test_framework.random_sequence_checker import (
@@ -8,8 +9,14 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def random_subset(n, k):
-    # TODO - you fill in here.
-    return []
+    chosen_map = dict()
+    subset = []
+
+    for i in range(k):
+        rand_num = random.randint(i, n - 1)
+        subset.append(chosen_map.get(rand_num, rand_num))
+        chosen_map[rand_num] = chosen_map.get(i, i)
+    return subset
 
 
 @enable_executor_hook
