@@ -8,28 +8,47 @@ from test_framework.test_utils import enable_executor_hook
 Interval = collections.namedtuple('Interval', ('left', 'right'))
 
 
-def add_interval(disjoint_intervals, new_interval):
-    a = disjoint_intervals
-    xlt, xrt = new_interval
+def add_interval(A, x):
+    n = len(A)
     result = []
-    n = len(a)
     i = 0
     while i < n:
-        if xlt > a[i].left and xlt > a[i].right:
-            result.append(a[i])
-        elif xlt < a[i].left and xrt > a[i].right:
-            pass
-        elif (xlt >= a[i].left and xlt <= a[i].right) or (xrt >= a[i].left and xrt <= a[i].right):
-            xlt = min(xlt, a[i].left)
-            xrt = max(xrt, a[i].right)
+        if x.left > A[i].right:
+            result.append(A[i])
+        elif (x.left <= A[i].left and x.right >= A[i].right) or (x.left >= A[i].left and x.left <= A[i].right) or (x.right >= A[i].left and x.right <= A[i].right):
+            x = Interval(min(x.left, A[i].left), max(x.right, A[i].right))
         else:
             break
         i += 1
-    result.append(Interval(xlt, xrt))
+    result.append(x)
     while i < n:
-        result.append(a[i])
+        result.append(A[i])
         i += 1
     return result
+
+
+# def add_interval(disjoint_intervals, new_interval):
+#     a = disjoint_intervals
+#     xlt, xrt = new_interval
+#     result = []
+#     n = len(a)
+#     i = 0
+#     while i < n:
+#         if xlt > a[i].left and xlt > a[i].right:
+#             result.append(a[i])
+#         elif xlt < a[i].left and xrt > a[i].right:
+#             pass
+#         elif (xlt >= a[i].left and xlt <= a[i].right) or (xrt >= a[i].left and xrt <= a[i].right):
+#             xlt = min(xlt, a[i].left)
+#             xrt = max(xrt, a[i].right)
+#         else:
+#             break
+#         i += 1
+#     result.append(Interval(xlt, xrt))
+#     while i < n:
+#         result.append(a[i])
+#         i += 1
+#     return result
 
 
 @enable_executor_hook
